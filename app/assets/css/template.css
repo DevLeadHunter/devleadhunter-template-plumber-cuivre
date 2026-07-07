@@ -8,15 +8,18 @@
 @source '../../**/*.{vue,ts}';
 
 /*
- * Neutral placeholder design tokens. This is what makes each template look different —
- * replace the font and colors with your template's own art direction (DA).
+ * plumber-cuivre (« Plombier Source ») design tokens.
+ *
+ * The template's per-component colors are derived at runtime inside the root's `.cuivre`
+ * scope (from `--cuivre-blue` / `--cuivre-ink` / `--cuivre-aqua`, themed from the client
+ * palette). Only the global-facing tokens live here: the display + body typefaces
+ * (Bricolage Grotesque + Archivo, loaded via <useHead> in the root).
  */
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Archivo', ui-sans-serif, system-ui, sans-serif;
 
-  --color-brand: #2f6df0;
-  --color-brand-soft: #5b8ef5;
-  --color-surface: #ffffff;
-  --color-ink: #0f172a;
-  --color-muted: #64748b;
+  --color-cuivre-blue: #1080b4;
+  --color-cuivre-ink: #10293d;
+  --color-cuivre-aqua: #22a8c4;
 }

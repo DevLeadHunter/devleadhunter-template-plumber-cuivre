@@ -46,6 +46,11 @@ export default withNuxt(
       ],
       'prettier/prettier': 'error',
       'jsdoc/require-jsdoc': 'off',
+      // TypeScript is the source of truth for types: JSDoc stays descriptive, so the
+      // type-in-tag jsdoc rules are redundant and would force `@param {T}` duplication.
+      'jsdoc/require-param-type': 'off',
+      'jsdoc/require-returns-type': 'off',
+      'jsdoc/require-returns-check': 'off',
     },
   },
   {
