@@ -310,18 +310,48 @@ function formatOpeningHours(openingHours: SiteContent['openingHours']): string {
 }
 
 /**
+ * Retourne le texte éditorial du contenu s'il est non vide, sinon le défaut de la template.
+ * @param value Texte éditorial issu de `SiteContent` (potentiellement absent).
+ * @param templateDefault Copie par défaut possédée par la template.
+ * @returns Le texte à afficher.
+ */
+function resolveEditorialText(value: string | undefined, templateDefault: string): string {
+  return typeof value === 'string' && value.trim().length > 0 ? value : templateDefault
+}
+
+/**
  * Construit le contenu de page entièrement typé à partir d'un `SiteContent`.
  *
  * Les champs VARIABLES (nom, téléphone, ville, services, avis, galerie, FAQ, horaires…)
  * proviennent de `content` ; les champs BOILERPLATE (titres de sections, cadrage éditorial,
- * repères de confiance, points…) proviennent des défauts de la template. Les règles de
- * filtrage d'origine sont conservées : galerie limitée à 7 éléments, avis/FAQ sans texte
- * écartés, premier avis mis en vedette.
+ * repères de confiance, points…) proviennent des défauts de la template. La copie ÉDITORIALE
+ * éditable par le client (badge et points du hero, libellés CTA, repères de confiance, titres
+ * de sections) est reprise de `content` quand elle est non vide, sinon retombe sur les défauts.
+ * Les règles de filtrage d'origine sont conservées : galerie limitée à 7 éléments, avis/FAQ
+ * sans texte écartés, premier avis mis en vedette.
  * @param content Données variables du prospect.
  * @returns Le contenu typé prêt pour le rendu par les sections.
  */
 export function buildCuivreContent(content: SiteContent): CuivrePageContent {
   const palette = content.palette ?? {}
+
+  const trustItemsFromContent: CuivreTrustItem[] = Array.isArray(content.trustItems)
+    ? content.trustItems
+        .map((item): CuivreTrustItem => ({ value: item.value ?? '', label: item.label ?? '' }))
+        .filter((item): boolean => item.value.length > 0 || item.label.length > 0)
+    : []
+  const trustItems: CuivreTrustItem[] = trustItemsFromContent.length
+    ? trustItemsFromContent
+    : cuivreDefaults.trustItems
+
+  const heroPointsFromContent: string[] = Array.isArray(content.heroPoints)
+    ? content.heroPoints.filter(
+        (point): boolean => typeof point === 'string' && point.trim().length > 0,
+      )
+    : []
+  const heroPoints: string[] = heroPointsFromContent.length
+    ? heroPointsFromContent
+    : cuivreDefaults.heroPoints
 
   const areaLabel: string =
     typeof content.area === 'string' && content.area.length > 0
@@ -348,7 +378,7 @@ export function buildCuivreContent(content: SiteContent): CuivrePageContent {
           : cuivreDefaultTheme.accent,
     },
     hero: {
-      badge: cuivreDefaults.heroBadge,
+      badge: resolveEditorialText(content.heroBadge, cuivreDefaults.heroBadge),
       title: content.businessName ?? '',
       subtitle:
         content.subtitle && content.subtitle.length > 0
@@ -356,13 +386,13 @@ export function buildCuivreContent(content: SiteContent): CuivrePageContent {
           : cuivreDefaults.heroSubtitle,
       city: content.city ?? '',
       phone: content.phone ?? '',
-      ctaCallLabel: cuivreDefaults.heroCtaCallLabel,
-      ctaQuoteLabel: cuivreDefaults.heroCtaQuoteLabel,
+      ctaCallLabel: resolveEditorialText(content.ctaCallLabel, cuivreDefaults.heroCtaCallLabel),
+      ctaQuoteLabel: resolveEditorialText(content.ctaQuoteLabel, cuivreDefaults.heroCtaQuoteLabel),
       image: content.heroImage ?? '',
       imageCaption: '',
-      points: cuivreDefaults.heroPoints,
+      points: heroPoints,
     },
-    trustItems: cuivreDefaults.trustItems,
+    trustItems,
     emergency: {
       heading: cuivreDefaults.emergencyHeading,
       text: cuivreDefaults.emergencyText,
@@ -371,7 +401,7 @@ export function buildCuivreContent(content: SiteContent): CuivrePageContent {
       items: cuivreDefaults.emergencyItems,
     },
     services: {
-      heading: cuivreDefaults.servicesHeading,
+      heading: resolveEditorialText(content.servicesHeading, cuivreDefaults.servicesHeading),
       subheading: cuivreDefaults.servicesSubheading,
       items: Array.isArray(content.services)
         ? content.services.map((service): CuivreServiceItem => ({
@@ -388,7 +418,7 @@ export function buildCuivreContent(content: SiteContent): CuivrePageContent {
     },
     about: {
       kicker: cuivreDefaults.aboutKicker,
-      heading: cuivreDefaults.aboutHeading,
+      heading: resolveEditorialText(content.aboutHeading, cuivreDefaults.aboutHeading),
       text: content.about && content.about.length > 0 ? content.about : cuivreDefaults.aboutText,
       image: content.aboutImage ?? '',
       imageCaption: '',
@@ -400,7 +430,7 @@ export function buildCuivreContent(content: SiteContent): CuivrePageContent {
       items: cuivreDefaults.brandsItems,
     },
     gallery: {
-      heading: cuivreDefaults.galleryHeading,
+      heading: resolveEditorialText(content.galleryHeading, cuivreDefaults.galleryHeading),
       subheading: cuivreDefaults.gallerySubheading,
       items: Array.isArray(content.gallery)
         ? content.gallery
@@ -418,7 +448,7 @@ export function buildCuivreContent(content: SiteContent): CuivrePageContent {
       items: cuivreDefaults.processItems,
     },
     reviews: {
-      heading: cuivreDefaults.reviewsHeading,
+      heading: resolveEditorialText(content.reviewsHeading, cuivreDefaults.reviewsHeading),
       items: Array.isArray(content.reviews)
         ? content.reviews
             .map((review): CuivreReviewItem => ({
@@ -439,7 +469,7 @@ export function buildCuivreContent(content: SiteContent): CuivrePageContent {
       note: cuivreDefaults.zoneNote,
     },
     faq: {
-      heading: cuivreDefaults.faqHeading,
+      heading: resolveEditorialText(content.faqHeading, cuivreDefaults.faqHeading),
       items: Array.isArray(content.faq)
         ? content.faq
             .map((item): CuivreFaqItem => ({
@@ -450,7 +480,7 @@ export function buildCuivreContent(content: SiteContent): CuivrePageContent {
         : [],
     },
     contact: {
-      heading: cuivreDefaults.contactHeading,
+      heading: resolveEditorialText(content.contactHeading, cuivreDefaults.contactHeading),
       subheading: cuivreDefaults.contactSubheading,
       phone: content.phone ?? '',
       email: content.email ?? '',

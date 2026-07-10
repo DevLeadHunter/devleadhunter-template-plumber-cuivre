@@ -15,6 +15,9 @@ export const mockSiteContent: SiteContent = {
   email: 'contact@plomberie-martin.fr',
   city: 'Rennes',
   area: 'Ille-et-Vilaine',
+  // Copie éditoriale éditée par le client dans son CMS (absente = défaut de la template).
+  heroBadge: 'Plombier chauffagiste depuis 2003',
+  servicesHeading: 'Nos interventions',
   about:
     "Artisan plombier installé à Rennes depuis plus de quinze ans, je prends en charge vos dépannages, installations et rénovations avec le même soin. Quand vous appelez, vous parlez directement à l'artisan qui viendra chez vous — pas à un standard. Diagnostic honnête, matériel de qualité et chantier laissé propre : c'est ma manière de travailler.",
   heroImage: 'https://picsum.photos/seed/cuivre-hero/800/600',
