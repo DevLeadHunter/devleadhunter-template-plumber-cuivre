@@ -31,7 +31,8 @@
 /**
  * Bande « marques posées » : les fabricants couramment installés (Grohe,
  * Atlantic, Geberit…) en pastilles — un repère de sérieux immédiat pour le
- * visiteur, entièrement éditable dans Storyblok.
+ * visiteur. Copie éditoriale possédée par la template (`cuivreDefaults.brandsItems`
+ * dans app/types/cuivre.ts) : le client ne peut PAS l'éditer dans son CMS.
  */
 import type { CuivreBrandsContent } from '~/types/cuivre'
 
