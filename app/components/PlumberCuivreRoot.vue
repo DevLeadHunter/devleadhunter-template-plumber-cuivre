@@ -57,6 +57,26 @@
     <footer class="cuivre-footer">
       <div class="cuivre-container cuivre-footer__inner">
         <p class="cuivre-footer__brand">{{ parsed.hero.title || businessName }}</p>
+
+        <!-- Réseaux sociaux (masqués si le prospect n'en a aucun) -->
+        <ul
+          v-if="parsed.social.length"
+          class="cuivre-footer__social">
+          <li
+            v-for="link in parsed.social"
+            :key="link.network">
+            <a
+              :href="link.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              :title="link.label"
+              :aria-label="link.label"
+              class="cuivre-social">
+              {{ link.label }}
+            </a>
+          </li>
+        </ul>
+
         <p class="cuivre-footer__meta">
           <template v-if="parsed.contact.city">{{ parsed.contact.city }} · </template>
           <template v-if="parsed.contact.phone">{{ parsed.contact.phone }} · </template>
@@ -498,6 +518,44 @@ useHead({
   font-size: 0.78rem;
   letter-spacing: 0.04em;
   color: color-mix(in srgb, white 65%, transparent);
+}
+
+/* Réseaux sociaux : pilules claires sur l'encre marine, virant au bleu eau au survol. */
+.cuivre-footer__social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cuivre-social {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.42rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, white 26%, transparent);
+  background: color-mix(in srgb, white 6%, transparent);
+  font-family: var(--cuivre-font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cuivre-social:hover {
+  background: var(--cuivre-blue);
+  border-color: var(--cuivre-blue);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 /* ---- Intro (manchette) ---- */

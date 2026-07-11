@@ -116,6 +116,10 @@ export const mockSiteContent: SiteContent = {
         'Oui. Nos installations sont couvertes par la garantie décennale et nous restons disponibles en cas de besoin après le chantier.',
     },
   ],
+  social: [
+    { network: 'facebook', url: 'https://facebook.com/plomberie-martin' },
+    { network: 'instagram', url: 'https://instagram.com/plomberie-martin' },
+  ],
   zones: ['Rennes', 'Cesson-Sévigné', 'Bruz', 'Saint-Grégoire', 'Chantepie', 'Pacé'],
   openingHours: [
     { day: 'Lundi', hours: '8h–18h' },

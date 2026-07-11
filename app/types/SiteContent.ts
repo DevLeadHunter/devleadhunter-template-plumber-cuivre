@@ -11,6 +11,7 @@ export type {
   SiteContentFaqItem,
   SiteContentGalleryImage,
   SiteContentOpeningHours,
+  SiteContentSocialLink,
 } from '@devleadhunter/website-content'
 
 export { emptySiteContent } from '@devleadhunter/website-content'
